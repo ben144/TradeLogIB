@@ -66,7 +66,7 @@ def ConverSymbol_IB2OX(symbol):
 
 ap = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 ap.add_argument('--host',            type=str,  default='127.0.0.1',      help='Host to connect to')
-ap.add_argument('--port',            type=int,  default=4001,             help='Port to connect to')
+ap.add_argument('--port',            type=int,  default=7496,             help='Port to connect to')
 ap.add_argument('--clientId',        type=int,  default=0,                help='Client Id')
 ap.add_argument('--daemon',                     default=False,            help='Turn on deamon mode', action='store_true')
 ap.add_argument('--UTC',                        default=False,            help='Store trades in UTC timezone, i.e. do not convert time to Local Time Zone)', action='store_true')
@@ -82,9 +82,11 @@ try:
     import locale
     locale.setlocale(locale.LC_ALL, 'american')
 
+    print('start')
     ib = IB()
     ib.connect(host=args.host, port=args.port, clientId=args.clientId)
-
+    print('after connect')   
+    
     trades_map = {}
 
     if args.daemon:
@@ -105,8 +107,11 @@ try:
             ib.connect(host=args.host, port=args.port, clientId=args.clientId)
 
         has_new_data = False
+        
+        print( ib.fills() )
 
         for fill in ib.fills():
+            print('Got a fill')
             if fill.contract.secType != 'OPT':
                 continue
 
